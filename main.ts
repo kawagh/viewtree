@@ -4,13 +4,30 @@ import { makeDOTGraphString } from "./src/draw.ts";
 
 const VERSION = "0.1.0";
 
+const HELP = `
+Usage: viewtree [options]
+
+options:
+  -h --help        show help
+  -v --version     show version
+
+example:
+  viewtree <vue-project-path>  # show detected component dependencies
+  viewtree                     # same as "viewtree ."
+`;
+
 const main = async () => {
   const args = parseArgs(Deno.args, {
-    boolean: ["version"],
+    boolean: ["help", "version"],
     alias: {
+      h: "help",
       v: "version",
     },
   });
+  if (args.help) {
+    console.log(HELP);
+    Deno.exit(0);
+  }
   if (args.version) {
     console.log(VERSION);
     Deno.exit(0);
