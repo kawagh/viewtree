@@ -51,6 +51,12 @@ const main = async () => {
   if (args.root) {
     const adjList = buildAdjacencyList(edges);
     const subEdges = listEdgeFromRoot(args.root, adjList);
+
+    if (subEdges.length == 0) {
+      console.log(`Vue component dependency is not found : in ${directory}; root: ${args.root}`);
+      Deno.exit(1);
+    }
+
     const str = makeDOTGraphString(subEdges, {
       title: `ComponentDependency root:${args.root}`,
     });
