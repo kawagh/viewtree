@@ -25,3 +25,11 @@ viewtree | dot -Tsvg -o temp.svg && open temp.svg
 ```shell
 viewtree <vue-project-path> | dot -Tsvg -o temp.svg && xdg-open temp.svg
 ```
+
+## for develop
+
+### test
+
+```shell
+deno test
+```
