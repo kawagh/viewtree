@@ -1,4 +1,5 @@
 import { walk } from "@std/fs/walk";
+import { ImportInfo } from "./types.ts";
 
 export const listVueFiles = async (directory: string): Promise<void> => {
   for await (const entry of walk(directory)) {
@@ -7,11 +8,6 @@ export const listVueFiles = async (directory: string): Promise<void> => {
       console.log("name", entry.name);
     }
   }
-};
-
-type ImportInfo = {
-  from: string;
-  to: string;
 };
 
 export const listVueComponentDependencies = async (
