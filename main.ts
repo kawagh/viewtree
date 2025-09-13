@@ -17,6 +17,12 @@ const main = async () => {
   }
   const directory = args._.length == 0 ? "." : String(args._[0]);
   const edges = await listVueComponentDependencies(directory);
+
+  if (edges.length == 0) {
+    console.log(`Vue component dependency is not found : in ${directory}`);
+    Deno.exit(1);
+  }
+
   const str = makeDOTGraphString(edges, {});
   console.log(str);
 };
