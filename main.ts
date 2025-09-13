@@ -1,5 +1,9 @@
 import { parseArgs } from "@std/cli/parse-args";
-import { listVueComponentDependencies } from "./src/analyze.ts";
+import {
+  buildAdjacencyList,
+  listEdgeFromRoot,
+  listVueComponentDependencies,
+} from "./src/analyze.ts";
 import { makeDOTGraphString } from "./src/draw.ts";
 
 const VERSION = "0.1.0";
@@ -8,19 +12,23 @@ const HELP = `
 Usage: viewtree [options]
 
 options:
-  -h --help        show help
-  -v --version     show version
+  -h --help                     show help
+  -v --version                  show version
+  -r --root <RootComponentName> specify root component to show subgraph
 
 example:
   viewtree <vue-project-path>  # show detected component dependencies
   viewtree                     # same as "viewtree ."
+  viewtree -r SpecificView     # show dependencies of SpecificView.vue
 `;
 
 const main = async () => {
   const args = parseArgs(Deno.args, {
+    string: ["root"],
     boolean: ["help", "version"],
     alias: {
       h: "help",
+      r: "root",
       v: "version",
     },
   });
@@ -38,6 +46,16 @@ const main = async () => {
   if (edges.length == 0) {
     console.log(`Vue component dependency is not found : in ${directory}`);
     Deno.exit(1);
+  }
+
+  if (args.root) {
+    const adjList = buildAdjacencyList(edges);
+    const subEdges = listEdgeFromRoot(args.root, adjList);
+    const str = makeDOTGraphString(subEdges, {
+      title: `ComponentDependency root:${args.root}`,
+    });
+    console.log(str);
+    Deno.exit(0);
   }
 
   const str = makeDOTGraphString(edges, {});
