@@ -9,9 +9,9 @@ const main = async () => {
     boolean: ["version"],
     alias: {
       v: "version",
-    }
+    },
   });
-  if(args.version) {
+  if (args.version) {
     console.log(VERSION);
     Deno.exit(0);
   }
