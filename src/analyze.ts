@@ -33,7 +33,7 @@ const extractImportInfoFromLine = (
   line: string,
 ): ImportInfo | null => {
   if (!line.startsWith("import")) return null;
-  if (!line.endsWith(".vue'")) return null;
+  if (!line.endsWith(".vue'") && !line.endsWith(".vue';")) return null;
   const tokens = line.split(" ");
   const tailToken = tokens[tokens.length - 1];
   // NOTE: ディレクトリの異なる同名のコンポーネントを区別出来るようにする
