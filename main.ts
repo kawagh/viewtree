@@ -6,7 +6,7 @@ import {
 } from "./src/analyze.ts";
 import { makeDOTGraphString } from "./src/draw.ts";
 
-const VERSION = "0.1.0";
+const VERSION = "0.2.0";
 
 const HELP = `
 Usage: viewtree [options]
