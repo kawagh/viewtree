@@ -2,8 +2,8 @@
 
 ## installation
 
-install by deno.
+In repository root, install by deno.
 
 ```shell
-deno install --global --allow-read -f --config deno.json --name viewtree main.ts
+deno task install
 ```
