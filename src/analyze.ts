@@ -43,7 +43,7 @@ const extractImportInfoFromLine = (
   return { from: fromComponentName, to: toCompnentName };
 };
 
-const extractComponentName = (path: string): string => {
+export const extractComponentName = (path: string): string => {
   const componentName =
     path.split("/")[path.split("/").length - 1].split(".")[0];
   return componentName;
