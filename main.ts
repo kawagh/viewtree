@@ -58,7 +58,7 @@ const main = async () => {
     }
 
     const str = makeDOTGraphString(subEdges, {
-      title: `ComponentDependency root:${args.root}`,
+      title: `"ComponentDependency root:${args.root}"`,
     });
     console.log(str);
     Deno.exit(0);
