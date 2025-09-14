@@ -1,6 +1,6 @@
 # viewtree
 
-Tool to describe vue components dependency (as DOT format)
+Tool to describe vue components dependency (as DOT,Mermaid format)
 
 ## installation
 
@@ -24,6 +24,25 @@ viewtree | dot -Tsvg -o temp.svg && open temp.svg
 
 ```shell
 viewtree <vue-project-path> | dot -Tsvg -o temp.svg && xdg-open temp.svg
+```
+
+- Mermaid format output
+
+```shell
+viewtree test/resource --format mermaid
+```
+
+output:
+```mermaid
+---
+title: ComponentDependency
+---
+graph TD
+  ListView --> Header
+  ListView --> Footer
+  ListView --> Table
+  Table --> TableHeader
+  Table --> TableRow
 ```
 
 ## for develop
