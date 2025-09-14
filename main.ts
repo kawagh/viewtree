@@ -85,7 +85,7 @@ const outputString = (edges: ImportInfo[], format?: string, title?: string) => {
           console.error(`unsupported format: ${format}`);
           Deno.exit(1);
         }
-        return makeDOTGraphString(edges, {});
+        return makeDOTGraphString(edges, {title: title});
     }
   })();
   console.log(str);
