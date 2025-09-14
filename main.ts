@@ -65,7 +65,7 @@ const main = async () => {
     outputString(
       subEdges,
       args.format,
-      `"ComponentDependency root:${args.root}"`,
+      `ComponentDependency root:${args.root}`,
     );
     Deno.exit(0);
   }

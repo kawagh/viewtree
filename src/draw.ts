@@ -26,7 +26,7 @@ export const makeMermaidGraphString = (
   `;
   let result = header + "graph TD\n";
   for (const { from, to } of infoList) {
-    result += `    "${from}" --> "${to}"\n`;
+    result += `    ${from} --> ${to}\n`;
   }
   return result;
 };
