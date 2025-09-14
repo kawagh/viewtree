@@ -6,7 +6,15 @@ export const makeDOTGraphString = (
   infoList: ImportInfo[],
   { title = "ComponentDependency" }: DOTOption,
 ): string => {
-  let result = `digraph ${title} {\n`;
+
+  let result = `digraph graph_identifier {\n`;
+  // add attributes
+  // ref: https://graphviz.org/doc/info/attrs.html
+  result += "graph [\n";
+  result += `  label = "${title}"\n`;
+  result += `  labelloc = "t"\n`;
+  result += "]\n";
+
   for (const { from, to } of infoList) {
     result += `  "${from}" -> "${to}";\n`;
   }
