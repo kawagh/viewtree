@@ -4,7 +4,8 @@ import {
   listEdgeFromRoot,
   listVueComponentDependencies,
 } from "./src/analyze.ts";
-import { makeDOTGraphString } from "./src/draw.ts";
+import { makeDOTGraphString, makeMermaidGraphString } from "./src/draw.ts";
+import { ImportInfo } from "./src/types.ts";
 
 const VERSION = "0.2.0";
 
@@ -14,6 +15,7 @@ Usage: viewtree [options]
 options:
   -h --help                     show help
   -v --version                  show version
+  -f --format <GraphFormat>     graph format [dot(default), mermaid]
   -r --root <RootComponentName> specify root component to show subgraph
 
 example:
@@ -24,9 +26,10 @@ example:
 
 const main = async () => {
   const args = parseArgs(Deno.args, {
-    string: ["root"],
+    string: ["format", "root"],
     boolean: ["help", "version"],
     alias: {
+      f: "format",
       h: "help",
       r: "root",
       v: "version",
@@ -53,18 +56,38 @@ const main = async () => {
     const subEdges = listEdgeFromRoot(args.root, adjList);
 
     if (subEdges.length == 0) {
-      console.log(`Vue component dependency is not found : in ${directory}; root: ${args.root}`);
+      console.log(
+        `Vue component dependency is not found : in ${directory}; root: ${args.root}`,
+      );
       Deno.exit(1);
     }
 
-    const str = makeDOTGraphString(subEdges, {
-      title: `"ComponentDependency root:${args.root}"`,
-    });
-    console.log(str);
+    outputString(
+      subEdges,
+      args.format,
+      `ComponentDependency root:${args.root}`,
+    );
     Deno.exit(0);
   }
 
-  const str = makeDOTGraphString(edges, {});
+  outputString(edges, args.format);
+};
+
+const outputString = (edges: ImportInfo[], format?: string, title?: string) => {
+  const str = (() => {
+    switch (format) {
+      case "dot":
+        return makeDOTGraphString(edges, { title: title });
+      case "mermaid":
+        return makeMermaidGraphString(edges, { title: title });
+      default:
+        if (format) {
+          console.error(`unsupported format: ${format}`);
+          Deno.exit(1);
+        }
+        return makeDOTGraphString(edges, {});
+    }
+  })();
   console.log(str);
 };
 
