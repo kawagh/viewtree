@@ -7,7 +7,7 @@ import {
 import { makeDOTGraphString, makeMermaidGraphString } from "./src/draw.ts";
 import { ImportInfo } from "./src/types.ts";
 
-const VERSION = "0.2.0";
+const VERSION = "0.3.0";
 
 const HELP = `
 Usage: viewtree [options]
