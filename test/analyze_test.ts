@@ -2,6 +2,7 @@ import { assertArrayIncludes, assertEquals } from "@std/assert";
 import {
   buildAdjacencyList,
   extractComponentName,
+  listEdgeFromRoot,
   listVueComponentDependencies,
 } from "../src/analyze.ts";
 import { ImportInfo } from "../src/types.ts";
@@ -44,4 +45,20 @@ Deno.test("buildAdjacencyList", () => {
   assertEquals(result.get("ListView"), ["Header", "Footer", "Table"]);
   assertEquals(result.get("Table"), ["TableRow", "TableHeader"]);
   assertEquals(result.get("NonExistent"), undefined);
+});
+
+Deno.test("listEdgeFromRoot", () => {
+  const adjacencyList = new Map<string, string[]>();
+  adjacencyList.set("ListView", ["Header", "Footer", "Table"]);
+  adjacencyList.set("Table", ["TableRow", "TableHeader"]);
+
+  const result = listEdgeFromRoot("Table", adjacencyList);
+
+  const expected: ImportInfo[] = [
+    { from: "Table", to: "TableRow" },
+    { from: "Table", to: "TableHeader" },
+  ];
+
+  assertArrayIncludes(result, expected);
+  assertEquals(result.length, expected.length);
 });
