@@ -1,5 +1,6 @@
 import { assertArrayIncludes, assertEquals } from "@std/assert";
 import {
+  buildAdjacencyList,
   extractComponentName,
   listVueComponentDependencies,
 } from "../src/analyze.ts";
@@ -27,4 +28,20 @@ Deno.test({
       },
     });
   },
+});
+
+Deno.test("buildAdjacencyList", () => {
+  const edges: ImportInfo[] = [
+    { from: "ListView", to: "Header" },
+    { from: "ListView", to: "Footer" },
+    { from: "ListView", to: "Table" },
+    { from: "Table", to: "TableRow" },
+    { from: "Table", to: "TableHeader" },
+  ];
+
+  const result = buildAdjacencyList(edges);
+
+  assertEquals(result.get("ListView"), ["Header", "Footer", "Table"]);
+  assertEquals(result.get("Table"), ["TableRow", "TableHeader"]);
+  assertEquals(result.get("NonExistent"), undefined);
 });
