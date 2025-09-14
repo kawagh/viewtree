@@ -31,5 +31,5 @@ viewtree <vue-project-path> | dot -Tsvg -o temp.svg && xdg-open temp.svg
 ### test
 
 ```shell
-deno test
+deno task test
 ```
