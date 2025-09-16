@@ -66,6 +66,7 @@ title: ComponentDependency root:Table
 graph TD
   Table --> TableHeader
   Table --> TableRow
+  TableRow --> UserIcon
 ```
 
 ---
