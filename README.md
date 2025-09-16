@@ -33,6 +33,7 @@ viewtree test/resource --format mermaid
 ```
 
 output:
+
 ```mermaid
 ---
 title: ComponentDependency
@@ -41,8 +42,52 @@ graph TD
   ListView --> Header
   ListView --> Footer
   ListView --> Table
+  DetailView --> DetailContainer
   Table --> TableHeader
   Table --> TableRow
+  TableRow --> UserIcon
+  DetailContainer --> UserIcon
+```
+
+---
+
+- Show specific component dependencies using --root option
+
+```shell
+viewtree test/resource --root Table --format mermaid
+```
+
+output:
+
+```mermaid
+---
+title: ComponentDependency root:Table
+---
+graph TD
+  Table --> TableHeader
+  Table --> TableRow
+```
+
+---
+
+- Show inverse dependencies using --inverse option (with --root)
+
+```shell
+viewtree test/resource --root Table --inverse --format mermaid
+```
+
+output:
+
+```mermaid
+---
+title: ComponentDependency root:UserIcon(inversed)
+---
+graph TD
+  TableRow --> UserIcon
+  Table --> TableRow
+  ListView --> Table
+  DetailContainer --> UserIcon
+  DetailView --> DetailContainer
 ```
 
 ## for develop

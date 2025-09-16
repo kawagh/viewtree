@@ -23,6 +23,9 @@ Deno.test({
           { from: "ListView", to: "Table" },
           { from: "Table", to: "TableRow" },
           { from: "Table", to: "TableHeader" },
+          { from: "TableRow", to: "UserIcon" },
+          { from: "DetailView", to: "DetailContainer" },
+          { from: "DetailContainer", to: "UserIcon" },
         ];
         assertArrayIncludes(result, expected);
         assertEquals(result.length, expected.length);
