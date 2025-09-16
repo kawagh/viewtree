@@ -1,6 +1,7 @@
 import { parseArgs } from "@std/cli/parse-args";
 import {
   buildAdjacencyList,
+  getInverseEdges,
   listEdgeFromRoot,
   listVueComponentDependencies,
 } from "./src/analyze.ts";
@@ -17,6 +18,7 @@ options:
   -v --version                  show version
   -f --format <GraphFormat>     graph format [dot(default), mermaid]
   -r --root <RootComponentName> specify root component to show subgraph
+  -i --inverse                  show inversed dependency (use with -r option)
 
 example:
   viewtree <vue-project-path>  # show detected component dependencies
@@ -27,10 +29,11 @@ example:
 const main = async () => {
   const args = parseArgs(Deno.args, {
     string: ["format", "root"],
-    boolean: ["help", "version"],
+    boolean: ["inverse", "help", "version"],
     alias: {
       f: "format",
       h: "help",
+      i: "inverse",
       r: "root",
       v: "version",
     },
@@ -43,6 +46,10 @@ const main = async () => {
     console.log(VERSION);
     Deno.exit(0);
   }
+  if (args.inverse && !args.root) {
+    console.error("--inverse option shoulde be used with --root option");
+    Deno.exit(1);
+  }
   const directory = args._.length == 0 ? "." : String(args._[0]);
   const edges = await listVueComponentDependencies(directory);
 
@@ -52,7 +59,8 @@ const main = async () => {
   }
 
   if (args.root) {
-    const adjList = buildAdjacencyList(edges);
+    const reverseEdges = getInverseEdges(edges);
+    const adjList = buildAdjacencyList(args.inverse ? reverseEdges : edges);
     const subEdges = listEdgeFromRoot(args.root, adjList);
 
     if (subEdges.length == 0) {
@@ -62,10 +70,15 @@ const main = async () => {
       Deno.exit(1);
     }
 
+    let title = `ComponentDependency root:${args.root}`;
+    if (args.inverse) {
+      title += "(inversed)";
+    }
     outputString(
       subEdges,
       args.format,
-      `ComponentDependency root:${args.root}`,
+      title,
+      args.inverse,
     );
     Deno.exit(0);
   }
@@ -73,19 +86,25 @@ const main = async () => {
   outputString(edges, args.format);
 };
 
-const outputString = (edges: ImportInfo[], format?: string, title?: string) => {
+const outputString = (
+  edges: ImportInfo[],
+  format?: string,
+  title?: string,
+  reverse: boolean = false,
+) => {
   const str = (() => {
+    const targetEdges = reverse ? getInverseEdges(edges) : edges;
     switch (format) {
       case "dot":
-        return makeDOTGraphString(edges, { title: title });
+        return makeDOTGraphString(targetEdges, { title: title });
       case "mermaid":
-        return makeMermaidGraphString(edges, { title: title });
+        return makeMermaidGraphString(targetEdges, { title: title });
       default:
         if (format) {
           console.error(`unsupported format: ${format}`);
           Deno.exit(1);
         }
-        return makeDOTGraphString(edges, { title: title });
+        return makeDOTGraphString(targetEdges, { title: title });
     }
   })();
   console.log(str);

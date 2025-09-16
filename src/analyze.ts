@@ -89,3 +89,9 @@ export const extractComponentName = (path: string): string => {
     path.split("/")[path.split("/").length - 1].split(".")[0];
   return componentName;
 };
+
+export const getInverseEdges = (edges: ImportInfo[]): ImportInfo[] => {
+  return edges.map((it) => {
+    return { from: it.to, to: it.from };
+  });
+};
